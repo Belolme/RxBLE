@@ -92,7 +92,8 @@ public class MainActivity extends AppCompatActivity {
                     public ObservableSource<String> apply(String s) throws Exception {
                         Log.d(TAG, "connect test: on write");
                         return mClient.write(MAC[1], UUID_SERVICE_CHANNEL,
-                                UUID_CHARACTERISTIC_CHANNEL, "01234567876543210#".getBytes());
+                                UUID_CHARACTERISTIC_CHANNEL,
+                                "01234567876543210#".getBytes());
                     }
                 })
                 .subscribe(new Observer<String>() {
@@ -119,6 +120,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     void search() {
+        // 第一参数指定扫描时间，第二个参数指定是否中断当前正在进行的扫描操作
         mClient.search(3000, false)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<BLEDevice>() {
