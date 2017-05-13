@@ -176,10 +176,7 @@ public class BluetoothLeConnector {
                                     @Override
                                     public void run() {
                                         if (!mIsStartService.get()) {
-                                            String err = "service not found force disconnect";
-                                            Log.e(TAG, err);
                                             gatt.disconnect();
-                                            mOnConnectListener.onError(err);
                                         }
                                     }
                                 });
@@ -187,6 +184,12 @@ public class BluetoothLeConnector {
                         }, 3000L);
 
                     } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
+
+                        if (!mIsStartService.get()) {
+                            String err = "service not found force disconnect";
+                            Log.e(TAG, err);
+                            mOnConnectListener.onError(err);
+                        }
 
                         mOnConnectListener.onDisconnect();
                         close();
@@ -202,10 +205,10 @@ public class BluetoothLeConnector {
                 @Override
                 public void run() {
                     // 清空连接服务设置的超时回调
+                    mIsStartService.set(true);
+                    mAlertHandler.removeCallbacksAndMessages(null);
 
                     if (status == BluetoothGatt.GATT_SUCCESS) {
-                        mIsStartService.set(true);
-                        mAlertHandler.removeCallbacksAndMessages(null);
                         Log.d(TAG, "进入通道连接！！！！ in thread " + Thread.currentThread());
                         mOnConnectListener.onServiceDiscover();
                     } else {
