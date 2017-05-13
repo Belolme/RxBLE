@@ -149,6 +149,7 @@ public class BluetoothLeConnector {
                         disconnectGatt();
                         Log.e(TAG, err);
                         mOnConnectListener.onError(err);
+                        mConnectStatus.set(BluetoothGatt.STATE_DISCONNECTED);
                         return;
                     }
 
