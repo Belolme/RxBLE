@@ -279,7 +279,6 @@ public class BluetoothLeConnector {
             @Override
             public void run() {
                 Log.d(TAG, "connect: in thread " + Thread.currentThread());
-                setOnConnectListener(callback);
 
                 if (mBluetoothAdapter == null) {
                     String err = "BluetoothAdapter not initialized or unspecified address.";
@@ -308,6 +307,9 @@ public class BluetoothLeConnector {
                     callback.onError(err);
                     return;
                 }
+
+                // 检查完没有任何错误再设置回调，确保上一次没有完成的操作得以继续回调，而不是被新的回调覆盖
+                setOnConnectListener(callback);
 
                 // We want to directly connect to the device, so we are setting the
                 // autoConnect
